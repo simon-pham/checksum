@@ -14,7 +14,7 @@ namespace checksum
             Md5 = 32,
             Sha1 = 40,
             Sha256 = 64,
-            Sha512 = 128, 
+            Sha512 = 128,
         }
 
         private const string MD5 = "md5";
@@ -39,7 +39,7 @@ namespace checksum
                 Console.WriteLine("File '{0}' doesn't exist.", configuration.FilePath);
                 Environment.Exit(1);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(configuration.HashToCheck) && string.IsNullOrWhiteSpace(configuration.HashType))
             {
                 var hashLength = configuration.HashToCheck.Length;
@@ -60,6 +60,7 @@ namespace checksum
                 }
             }
 
+
             HashAlgorithm hash_util = new MD5CryptoServiceProvider();
 
             if (configuration.HashType.ToLowerSafe() == SHA1)
@@ -75,10 +76,19 @@ namespace checksum
                 hash_util = new SHA512CryptoServiceProvider();
             }
 
+
+
             //todo: Wonder if we need to flip this for perf on very large files: http://stackoverflow.com/a/13926809
             var hash = hash_util.ComputeHash(File.Open(configuration.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
-            string hash_string = BitConverter.ToString(hash).Replace("-",string.Empty);
+            string hash_string = "";
+            if (string.IsNullOrWhiteSpace(configuration.OutputType) || configuration.OutputType.ToLower() != "b64")
+                hash_string = BitConverter.ToString(hash).Replace("-", string.Empty);
+            else
+                hash_string = Convert.ToBase64String(hash);
+
+
+
 
             if (string.IsNullOrWhiteSpace(configuration.HashToCheck))
             {
@@ -87,7 +97,7 @@ namespace checksum
                 Environment.Exit(0);
             }
 
-            var result = string.Compare(configuration.HashToCheck, hash_string, ignoreCase: true,culture:CultureInfo.InvariantCulture);
+            var result = string.Compare(configuration.HashToCheck, hash_string, ignoreCase: true, culture: CultureInfo.InvariantCulture);
 
             if (result != 0)
             {
@@ -134,6 +144,9 @@ namespace checksum
                  .Add("c=|check=",
                      "Optional: check - the signature you want to check. Not case sensitive.",
                      option => configuration.HashToCheck = option)
+                 .Add("o=|output=",
+                     "Optional:  output type - 'b64' for base64 string, 'hex' for hexadecimal string",
+                     option => configuration.OutputType = option)
                 ;
 
             try
