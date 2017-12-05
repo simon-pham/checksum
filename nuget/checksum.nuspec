@@ -18,6 +18,7 @@ To use checksum you would simply provide a file path and it will return the sum 
  * `checksum -f="relative\path"`
  * `checksum "relative\path"`
  * `checksum -f="c:\absolute\path" -t=sha256`
+ * `checksum -f="c:\absolute\path" -t=sha256 -o=b64`
 
 ### Validate a file against an existing signature
 You can also check against an existing signature.
@@ -42,12 +43,13 @@ OPTIONS
       Optional: hashtype - 'md5', 'sha1', 'sha256', or 'sha512'. Defaults to 'md5' or is determined by length of passed check value.
     -c, --check=VALUE
       Optional: check - the signature you want to check. Not case sensitive.
-
+	-o, --output=VALUE
+	  Optional:  output type - 'b64' for base64 string, 'hex' for hexadecimal string (default)
     </description>
-    <projectUrl>https://github.com/ferventcoder/checksum</projectUrl>
+    <projectUrl>https://github.com/simon-pham/checksum</projectUrl>
     <tags>checksum md5 sha1 sha2 sha256 sha512 hash</tags>
     <copyright>2014-Present RealDimensions Software, LLC</copyright>
-    <licenseUrl>https://raw.github.com/ferventcoder/checksum/master/LICENSE</licenseUrl>
+    <licenseUrl>https://raw.github.com/simon-pham/checksum/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes></releaseNotes>
   </metadata>
